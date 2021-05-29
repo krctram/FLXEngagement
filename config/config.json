@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "flxengagement-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/flxengagement/FlxengagementWebPart.js",
+          "manifest": "./src/webparts/flxengagement/FlxengagementWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "FlxengagementWebPartStrings": "lib/webparts/flxengagement/loc/{locale}.js"
+  }
+}

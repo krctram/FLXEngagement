@@ -1,0 +1,511 @@
+import { Version } from '@microsoft/sp-core-library';
+import {
+  IPropertyPaneConfiguration,
+  PropertyPaneTextField
+} from '@microsoft/sp-property-pane';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
+import { escape } from '@microsoft/sp-lodash-subset';
+
+import styles from './FlxengagementWebPart.module.scss';
+import * as strings from 'FlxengagementWebPartStrings';
+
+import "../../ExternalRef/css/bootstrap.css";
+import "../../ExternalRef/css/style.css";
+
+import { sp } from "@pnp/sp/presets/all";
+import "../../ExternalRef/js/bootstrap.js";
+import "../../ExternalRef/css/alertify.min.css";
+var alertify: any = require("../../ExternalRef/js/alertify.min.js");
+
+// var pagename = "";
+
+
+ import * as $ from "jquery";
+ var itemid = "";
+ var listUrl = ""
+ let LGUID = "";
+ let SiteName = "";
+ let SelectedImage = "";
+
+export interface IFlxengagementWebPartProps {
+  description: string;
+}
+
+export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxengagementWebPartProps> {
+  protected onInit(): Promise<void> {
+    return super.onInit().then(_ => {
+      
+      sp.setup({
+        spfxContext: this.context
+      });
+    });
+  }
+
+  public render(): void {
+    listUrl = this.context.pageContext.web.absoluteUrl;
+    var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
+    listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
+    SiteName = listUrl.split("/")[2]
+    console.log(SiteName);
+
+    this.domElement.innerHTML = `
+    <div class="flx-engagement-section">
+             
+    <!-- <div class="addiconengage"> 
+    <span class="addiconflxengage"data-bs-toggle="modal" data-bs-target="#staticBackdroptwo" ></span></div> -->
+    <div class="engagement-section d-flex flex-wrap" id="engageedit" >
+    <!-- <div class="q-link m-2 border text-center p-2">  
+    <div class="iconaddengage"> 
+    <span class="editimageflxengage"data-bs-toggle="modal" data-bs-target="#staticBackdropone"></span></div>
+   
+    <img class="q-link-img" src="https://media-exp1.licdn.com/dms/image/C5603AQG1sCX4C8uhCg/profile-displayphoto-shrink_800_800/0/1615561085905?e=1626307200&v=beta&t=SbQf_3OwRf5JSfMqg9fXLYvIwcfYWOLKl_lmJGr4qSE" alt="img"/>
+    <div class="q-link-title">Personal Coaching</div>
+    </div>
+    <div class="q-link m-2 border text-center p-2">
+    <img class="q-link-img" src="https://media-exp1.licdn.com/dms/image/C5603AQG1sCX4C8uhCg/profile-displayphoto-shrink_800_800/0/1615561085905?e=1626307200&v=beta&t=SbQf_3OwRf5JSfMqg9fXLYvIwcfYWOLKl_lmJGr4qSE" alt="img"/>
+    <div class="q-link-title">Education</div>
+    </div> 
+    <div class="q-link m-2 border text-center p-2">
+    <img class="q-link-img" src="https://media-exp1.licdn.com/dms/image/C5603AQG1sCX4C8uhCg/profile-displayphoto-shrink_800_800/0/1615561085905?e=1626307200&v=beta&t=SbQf_3OwRf5JSfMqg9fXLYvIwcfYWOLKl_lmJGr4qSE" alt="img"/>
+    <div class="q-link-title">Education</div>
+    </div> 
+    <div class="q-link m-2 border text-center p-2">
+    <img class="q-link-img" src="https://media-exp1.licdn.com/dms/image/C5603AQG1sCX4C8uhCg/profile-displayphoto-shrink_800_800/0/1615561085905?e=1626307200&v=beta&t=SbQf_3OwRf5JSfMqg9fXLYvIwcfYWOLKl_lmJGr4qSE" alt="img"/>
+    <div class="q-link-title">Personal Coaching</div>
+    </div>
+    <div class="q-link m-2 border text-center p-2">
+    <img class="q-link-img" src="https://media-exp1.licdn.com/dms/image/C5603AQG1sCX4C8uhCg/profile-displayphoto-shrink_800_800/0/1615561085905?e=1626307200&v=beta&t=SbQf_3OwRf5JSfMqg9fXLYvIwcfYWOLKl_lmJGr4qSE" alt="img"/>
+    <div class="q-link-title">Education</div>
+    </div>-->
+    
+   
+    </div>
+    
+    </div>  
+    <!--<div class="card text-center" style="width: 9rem; height:10.5rem ;border-radius:0">
+    <div class="card-body my-4">
+    <span class="engage-add-icon" data-bs-toggle="modal" data-bs-target="#staticBackdroptwo"></span>
+    <p class="engage-title my-2">Add Link</p>
+    </div>
+  </div>-->
+                                             
+                                                       
+                                                <!-- Modal -->
+ 
+ <div class="modal fade" id="staticBackdropone" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+   <div class="modal-dialog engagement-modal-dialog ">
+     <div class="modal-content rounded-0">  
+       <div class="modal-header modal-tile-header">   
+         <h5 class="modal-title w-100 text-center modalengage-color" id="staticBackdropLabel"> Edit Link </h5>
+      <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+       </div>
+        
+       
+       <div class="modal-body  modalbody-flexengage">
+       <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
+       <input type="text" class="form-control rounded-0" id="TitleFLXEngagement" aria-describedby=""></div></div>
+       <div class="row align-items-center my-3"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7">
+       <input type="text" class="form-control rounded-0" id="URLFLXEngagement" value="" aria-describedby=""></div></div>
+ 
+      <!-- <div class="row align-items-center my-3"><div class="col-4">OpeningNewTab</div>
+       <div class="col-1">:</div><div class="col-7">
+       <div class="form-check">
+   <input class="form-check-input rounded" type="checkbox" value="Yes" id="checkboxopenewtabFLXEngagement">
+  
+ </div></div></div>                               
+       
+      
+       <div class="row align-items-center my-3"><div class="col-4">Visible</div><div class="col-1">:</div><div class="col-7 custom-arrow">
+       <div class="form-check">
+   <input class="form-check-input rounded-0" type="checkbox" value="Yes" id="checkboxvisibleFLXEngagement">
+   
+ </div></div></div>  -->
+ 
+ <div class="row align-items-center my-3"><div class="col-4">Document Link</div><div class="col-1">:</div>
+ <div class="col-7">
+ <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
+ 
+ <!--<input type="checkbox" class="btn-check" id="checkboxvisibleFLXEngagement" autocomplete="off">
+ <label class="btn btn-engage-outline-theme" for="checkboxvisibleFLXEngagement">Visible</label>       
+ 
+ <input type="checkbox" class="btn-check" id="checkboxopenewtabFLXEngagement" autocomplete="off">
+ <label class="btn btn-engage-outline-theme" for="checkboxopenewtabFLXEngagement">Open a new tab</label>-->
+  
+ 
+   
+   <input type="checkbox" class="btn-check" id="checkboxvisibleFLXEngagement" autocomplete="off">
+   <label class="btn btn-outline-theme" for="checkboxvisibleFLXEngagement">Visible</label>
+ 
+   <input type="checkbox" class="btn-check" id="checkboxopenewtabFLXEngagement" autocomplete="off">
+   <label class="btn btn-outline-theme" for="checkboxopenewtabFLXEngagement">Open a new tab</label>
+ </div> 
+ </div>
+ </div>
+       <div class="row align-items-start my-3"><div class="col-4">Image</div><div class="col-1">:</div><div class="col-7">
+        <input type="file" class="form-control-file custom-life-engage" class="mt-1" id="File1FLXengageEdit" accept="image/*">
+        <div id="engagementEditFile"></div>
+        </div></div>
+     </div>
+ 
+ 
+       
+     <div class="modal-footer  modal-tile-footer justify-content-between"> 
+     <div class="btns-left">
+     <button type="button" class="btn btn-sm btn-danger rounded-0" id="engagementDeleteModal"  style="" data-bs-toggle="modal" data-bs-target="#EngagementDeleteModal">Delete</button>
+     </div>
+ 
+       <div class="btns-right d-flex">
+       <div class="addScreen">
+       <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnengagementEditClose" data-bs-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnmodalSubmit" style="display: none;">Submit</button>
+       </div>
+       <div class="viewScreen">
+       <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
+       <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnUpdateengage" style="">Update</button>
+       </div>
+       </div>
+     </div>
+     </div>
+   </div>
+   
+ </div>  
+ 
+ 
+ 
+ 
+ 
+                                                    <!-- Modal Add -->
+ 
+ 
+ <div class="modal fade" id="staticBackdroptwo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+   <div class="modal-dialog  engagement-modal-dialog">
+     <div class="modal-content rounded-0">
+       <div class="modal-header  modal-tile-header ">
+         <h5 class="modal-title w-100 text-center modalengage-color" id="staticBackdropLabel">Add Link</h5>
+         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+       </div>
+        
+       
+       <div class="modal-body">
+       <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="TitleFlXengage" aria-describedby=""></div></div>
+       <div class="row align-items-center my-3"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="URLFlXengage" value="" aria-describedby=""></div></div>
+ 
+      <!-- <div class="row align-items-center my-3"><div class="col-4">OpeningNewTab</div><div class="col-1">:</div>
+       <div class="col-7">
+       <div class="form-check">
+   <input class="form-check-input" type="checkbox" value="Yes" id="checkboxopentewtabFlXengage">
+  
+ </div></div></div>  -->
+       
+      
+   <!--    <div class="row align-items-center my-3"><div class="col-4">Visible</div><div class="col-1">:</div><div class="col-7 custom-arrow">
+       <div class="form-check">
+   <input class="form-check-input" type="checkbox" value="Yes" id="checkboxvisibleFlXengage">
+   
+ </div></div></div> -->
+ <div class="row align-items-center my-3"><div class="col-4">Document Link</div><div class="col-1">:</div>
+ <div class="col-7 ">
+ <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
+ 
+ <!--<input type="checkbox" class="btn-check" id="checkboxvisibleFlXengage" autocomplete="off">
+ <label class="btn btn-engage-outline-theme" for="checkboxvisibleFlXengage">Visible</label>       
+ 
+ <input type="checkbox" class="btn-check" id="checkboxopentewtabFlXengage" autocomplete="off">
+ <label class="btn btn-engage-outline-theme" for="checkboxopentewtabFlXengage">Open a new tab</label> -->
+ 
+ <input type="checkbox" class="btn-check" id="checkboxvisibleFlXengage" autocomplete="off">
+   <label class="btn btn-outline-theme" for="checkboxvisibleFlXengage">Visible</label>
+ 
+   <input type="checkbox" class="btn-check" id="checkboxopentewtabFlXengage" autocomplete="off">
+   <label class="btn btn-outline-theme" for="checkboxopentewtabFlXengage">Open a new tab</label>
+ </div> 
+ </div>
+ </div>
+       <div class="row align-items-start my-3"><div class="col-4">Image</div><div class="col-1">:</div><div class="col-7"> 
+       <input type="file" class="form-control-file custom-life-engage" class="mt-1" id="File1FlXengage"  accept="image/*">
+       <div id="engagementAddFileEmpty"></div>
+       </div></div>
+     </div>
+   
+                    
+       
+     <div class="modal-footer modal-tile-footer justify-content-between"> 
+     <div class="btns-left">
+     <button type="button" class="btn btn-sm btn-danger rounded-0" id="" style="display: none;" data-bs-toggle="modal" data-bs-target="#deleteAlterModal">Delete</button>
+     </div>
+ 
+       <div class="btns-right d-flex">
+       <div class="addScreen">
+       <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnengagementAddClose" data-bs-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnmodalSubmit" style="display: none;">Submit</button>
+       </div>
+       <div class="viewScreen">
+       <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
+       <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnSubmitengageFLXengage" style="">Submit</button>
+       </div>
+       </div>
+     </div>
+     </div>
+   </div>
+ </div>  
+ 
+ 
+ 
+ 
+ 
+ <!-- Delete Modal -->
+ 
+     <div class="modal fade" id="EngagementDeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
+   <div class="modal-dialog engagement-delete-warning-dialog">
+     <div class="modal-content rounded-0">
+       <div class="modal-header">
+          
+         <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+       </div>
+       <div class="modal-body engagement-delete-warning text-center pt-5"> 
+       <h5 class="modal-title" id="EngagementDeleteModallLabel">Confirmation</h5>
+       <p class="mb-0">Are you sure want to Delete?</p>
+       </div>
+       <div class="modal-footer">
+         <button type="button" id="cancelengagementDelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+         <button type="button" id="btnDeleteengage" class="btn btn-sm btn-danger rounded-0">Yes</button>
+       </div>
+     </div>
+   </div>
+ </div>
+ <!-- Delete Modal -->
+`;
+FetchFLXEngagement();
+
+    
+
+$("#engagementDeleteModal").click(()=>{
+  $(".engagement-modal-dialog").hide();
+})
+$("#cancelengagementDelete").click(()=>{
+  $(".engagement-modal-dialog").show();
+})
+$(document).on('click','.editimageflxengage',function(e){
+  e.currentTarget.getAttribute("data-id");
+   itemid =e.currentTarget.getAttribute("data-id") ;
+   GetFLXEngagement(); 
+ 
+})
+$("#btnUpdateengage").click(function(){
+    UpdateFLXEngagement(itemid);
+  })
+  
+  $("#btnDeleteengage").click(function(){
+    DeleteFLXEngagement(itemid);
+  })
+  
+  // $(document).on('click','#btnSubmitengageFLXengage',function(){
+  //   AddFLXEngagement();
+  // })
+  //$("#btnSubmitengageFLXengage").click(()=>{AddFLXEngagement();})
+  $("#btnSubmitengageFLXengage").click(function(){
+    AddFLXEngagement();
+  })
+
+  $(document).on("change", "#File1FLXengageEdit", function () {
+    if($("#File1FLXengageEdit").prop('files').length > 0){
+      $("#engagementEditFile").hide()
+    }else{
+      $("#engagementEditFile").show()
+    }
+  })
+  }
+
+  protected get dataVersion(): Version {
+    return Version.parse('1.0');
+  }
+
+  protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
+    return {
+      pages: [
+        {
+          header: {
+            description: strings.PropertyPaneDescription
+          },
+          groups: [
+            {
+              groupName: strings.BasicGroupName,
+              groupFields: [
+                PropertyPaneTextField('description', {
+                  label: strings.DescriptionFieldLabel
+                })
+              ]
+            }
+          ]
+        }
+      ]
+    };
+  }
+}
+
+function FetchFLXEngagement() {
+  
+  let list = sp.web.lists.getByTitle("FLXEngagement");
+list.get().then(l => {
+    console.log("List Id: " + l.Id);
+    LGUID=l.Id;
+}); 
+  var html = "";
+  
+  sp.web.lists
+    .getByTitle("FLXEngagement")
+    .items.select("*","Title", "URL", "OpeningNewTab", "Visible", "Image").filter("Visible eq '1'").getAll()
+    .then((items: any[]) => {
+      console.log(items);
+      
+      for (var i = 0; i < items.length; i++) {
+        const item = items[i];
+        const itemImage = JSON.parse(item.Image) || {};
+        const serverUrl = itemImage.serverUrl || "";
+        const imageUrl = itemImage.serverRelativeUrl || "";
+        
+        if (item.OpeningNewTab === true) {
+          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+            <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id ="${item.ID}"></span></div>
+            <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
+            <div class="q-link-title">${item.Title}</div></a></div>`
+          // console.log(items)
+        }
+        else { 
+          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
+          </div>
+            <a href="${item.URL}"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a class="" href="${item.URL}">
+            <div class="q-link-title ">${item.Title}</div></a></div>`
+        }
+      } 
+
+      if(items.length>=0){
+        html+=`<div class="card text-center m-2" style="width: 9rem; height:10.5rem ;border-radius:0">
+        <div class="card-body my-4">
+        <span class="engage-add-icon" data-bs-toggle="modal" data-bs-target="#staticBackdroptwo"></span>
+        <p class="engage-title my-2">Add Link</p>
+        </div>
+      </div>`
+      }   
+
+
+      var element = document.getElementById("engageedit");
+      element.innerHTML = html;
+
+    })
+} 
+
+ function GetFLXEngagement(){
+  $("#engagementEditFile").show()
+ sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).get().then((items: any[]) => 
+  {
+    const itemImage = JSON.parse(items["Image"]) || {};
+        const serverUrl = itemImage.serverUrl || "";
+        const imageUrl = itemImage.serverRelativeUrl || "";
+        console.log();
+        SelectedImage = imageUrl.split("/").pop()
+        
+    $("#File1FLXengageEdit").val("")
+    $("#TitleFLXEngagement").val(items['Title']);
+    $("#URLFLXEngagement").val(items['URL']);
+    $("#checkboxopenewtabFLXEngagement" ).prop("checked",items['OpeningNewTab']); 
+    $("#checkboxvisibleFLXEngagement" ).prop( "checked",items['Visible']);
+    $("#engagementEditFile").html(`<a href="#" onclick='window.open("${imageUrl}");return false;'>${imageUrl.split("/").pop()}</a>`);
+    
+  console.log(items);
+  
+ })
+ 
+}
+
+function UpdateFLXEngagement(itemid){
+  console.log(LGUID);
+  if($('#File1FLXengageEdit').prop('files').length > 0){
+    var Editfile =$('#File1FLXengageEdit').prop('files')[0];
+    sp.web.getFolderByServerRelativeUrl(`/sites/${SiteName}/SiteAssets/Lists/${LGUID}`).files
+  .add(Editfile.name, Editfile, true).then((fileItem)=>{
+    sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).update({
+      Title: $("#TitleFLXEngagement").val(),
+           URL: $("#URLFLXEngagement").val(),
+           OpeningNewTab: $("#checkboxopenewtabFLXEngagement").is(':checked') ? true : false,
+           Visible: $("#checkboxvisibleFLXEngagement").is(':checked') ? true : false,
+           Image: JSON.stringify({
+            "serverRelativeUrl": fileItem.data.ServerRelativeUrl
+          })
+    }).then((i)=>{
+      $("#btnengagementEditClose").trigger('click');
+      AlertMessage("<div class='alertfy-success'>Record updated successfully</div>");
+    })
+  })
+  }else{
+    sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).update({
+      Title: $("#TitleFLXEngagement").val(),
+       URL: $("#URLFLXEngagement").val(),
+       OpeningNewTab: $("#checkboxopenewtabFLXEngagement").is(':checked') ? true : false,
+       Visible: $("#checkboxvisibleFLXEngagement").is(':checked') ? true : false,
+       
+       
+      }).then(i => {
+        $("#btnengagementEditClose").trigger('click');
+        AlertMessage("<div class='alertfy-success'>Record updated successfully</div>");
+      });
+  }
+  
+}  
+function AddFLXEngagement() {
+console.log(LGUID);
+
+
+if($('#File1FlXengage').prop('files').length == 0){
+$("#engagementAddFileEmpty").html(`<p class="text-danger m-0">Please Choose a File</p>`)
+}else {
+//uploadfile
+var file =$('#File1FlXengage').prop('files')[0];  
+sp.web.getFolderByServerRelativeUrl(`/sites/${SiteName}/SiteAssets/Lists/${LGUID}`).files
+ .add(file.name, file, true)
+ .then((fileItem) => { 
+   console.log(fileItem);  
+   sp.web.lists.getByTitle("FLXEngagement").items.add({
+   Title: $("#TitleFlXengage").val(),
+   URL: $("#URLFlXengage").val(),
+   OpeningNewTab: $("#checkboxopentewtabFlXengage").is(':checked') ? true : false,
+   Visible: $("#checkboxvisibleFlXengage").is(':checked') ? true : false,
+   Image: JSON.stringify({
+     "serverRelativeUrl": fileItem.data.ServerRelativeUrl
+   })
+ }).then(i => {
+   $("#btnengagementAddClose").trigger('click');
+   AlertMessage("<div class='alertfy-success'>Record created successfully</div>");
+ });
+});
+}
+  
+}
+
+function DeleteFLXEngagement(itemid){
+  sp.web.lists.getByTitle("FLXEngagement").items.getById((parseInt(itemid))).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+  // AlertMessage("Record Deleted successfully");
+
+}
+ 
+ 
+function AlertMessage(Message) {
+  alertify
+    .alert()
+    .setting({
+      label: "OK",
+
+      message: Message,
+
+      onok: function () {
+        window.location.href = "#";
+        location.reload();
+
+        //window.location.href = "#";
+      },
+    })
+    .show()
+    .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div>")
+    .set("closable", false);
+}  
