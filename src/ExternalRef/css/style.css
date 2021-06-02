@@ -293,3 +293,6 @@ button.ajs-button.ajs-ok {
 .flxengagecursor p{
   cursor: pointer;
 }
+.flxengagecursor .engage-add-icon{
+  cursor: pointer;
+}

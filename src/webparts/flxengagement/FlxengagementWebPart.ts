@@ -369,7 +369,7 @@ list.get().then(l => {
             <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
             <div class="q-link-title">${item.Title}</div></a></div>`
           // console.log(items)
-        }
+        }    
         else { 
           html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
           <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
