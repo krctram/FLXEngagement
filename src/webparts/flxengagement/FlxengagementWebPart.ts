@@ -167,7 +167,6 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
      </div>
      </div>
    </div>
-   
  </div>  
  
  
@@ -220,7 +219,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
    <label class="btn btn-outline-theme" for="checkboxopentewtabFlXengage">Open a new tab</label>
  </div> 
  </div>
- </div>
+ </div> 
        <div class="row align-items-start my-3"><div class="col-4">Image</div><div class="col-1">:</div><div class="col-7"> 
        <input type="file" class="form-control-file custom-life-engage" class="mt-1" id="File1FlXengage"  accept="image/*">
        <div id="engagementAddFileEmpty"></div>
@@ -370,7 +369,7 @@ list.get().then(l => {
             <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
             <div class="q-link-title">${item.Title}</div></a></div>`
           // console.log(items)
-        }
+        }    
         else { 
           html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
           <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
@@ -381,7 +380,7 @@ list.get().then(l => {
       } 
 
       if(items.length>=0){
-        html+=`<div class="card text-center m-2" style="width: 9rem; height:10.5rem ;border-radius:0">
+        html+=`<div class="card text-center m-2 flxengagecursor" style="width: 9rem; height:10.5rem ;border-radius:0">
         <div class="card-body my-4">
         <span class="engage-add-icon" data-bs-toggle="modal" data-bs-target="#staticBackdroptwo"></span>
         <p class="engage-title my-2">Add Link</p>

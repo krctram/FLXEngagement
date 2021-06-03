@@ -35,9 +35,9 @@
   /* background: #fff; */
   border-radius: 0;
   font-family: "Roboto", sans-serif;
-   box-shadow: -1px 4px 12px -3px rgba(0, 0, 0, 0.52);
+   /* box-shadow: -1px 4px 12px -3px rgba(0, 0, 0, 0.52);
   -webkit-box-shadow: -1px 4px 12px -3px rgba(0, 0, 0, 0.52);
-  -moz-box-shadow: -1px 4px 12px -3px rgba(0, 0, 0, 0.52);
+  -moz-box-shadow: -1px 4px 12px -3px rgba(0, 0, 0, 0.52); */
 }
 .q-link-img {
   width: 3rem;
@@ -289,4 +289,10 @@ button.ajs-button.ajs-ok {
   font-family: "Roboto", sans-serif;
   color: #011e41;
   font-weight: 500;
+}
+.flxengagecursor p{
+  cursor: pointer;
+}
+.flxengagecursor .engage-add-icon{
+  cursor: pointer;
 }
