@@ -26,7 +26,7 @@ var alertify: any = require("../../ExternalRef/js/alertify.min.js");
  let LGUID = "";
  let SiteName = "";
  let SelectedImage = "";
-
+ var width="",height="",widthedit="",heightedit="";
 export interface IFlxengagementWebPartProps {
   description: string;
 }
@@ -104,7 +104,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
        <div class="modal-body  modalbody-flexengage">
        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
        <input type="text" class="form-control rounded-0" id="TitleFLXEngagement" aria-describedby=""></div></div>
-       <div class="row align-items-center my-3"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7">
+       <div class="row align-items-center my-3"><div class="col-4">Url</div><div class="col-1">:</div><div class="col-7">
        <input type="text" class="form-control rounded-0" id="URLFLXEngagement" value="" aria-describedby=""></div></div>
  
       <!-- <div class="row align-items-center my-3"><div class="col-4">OpeningNewTab</div>
@@ -121,7 +121,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
    
  </div></div></div>  -->
  
- <div class="row align-items-center my-3"><div class="col-4">Document Link</div><div class="col-1">:</div>
+ <div class="row align-items-center my-3"><div class="col-4">Url Properties</div><div class="col-1">:</div>
  <div class="col-7">
  <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
  
@@ -143,6 +143,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
  </div>
        <div class="row align-items-start my-3"><div class="col-4">Image</div><div class="col-1">:</div><div class="col-7">
         <input type="file" class="form-control-file custom-life-engage" class="mt-1" id="File1FLXengageEdit" accept="image/*">
+        <div id="engagementUpdateFileEmpty"></div>
         <div id="engagementEditFile"></div>
         </div></div>
      </div>
@@ -187,7 +188,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
        
        <div class="modal-body">
        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="TitleFlXengage" aria-describedby=""></div></div>
-       <div class="row align-items-center my-3"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="URLFlXengage" value="" aria-describedby=""></div></div>
+       <div class="row align-items-center my-3"><div class="col-4">Url</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="URLFlXengage" value="" aria-describedby=""></div></div>
  
       <!-- <div class="row align-items-center my-3"><div class="col-4">OpeningNewTab</div><div class="col-1">:</div>
        <div class="col-7">
@@ -202,7 +203,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
    <input class="form-check-input" type="checkbox" value="Yes" id="checkboxvisibleFlXengage">
    
  </div></div></div> -->
- <div class="row align-items-center my-3"><div class="col-4">Document Link</div><div class="col-1">:</div>
+ <div class="row align-items-center my-3"><div class="col-4">Url Properties</div><div class="col-1">:</div>
  <div class="col-7 ">
  <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
  
@@ -307,12 +308,38 @@ $("#btnUpdateengage").click(function(){
   })
 
   $(document).on("change", "#File1FLXengageEdit", function () {
+    var _URL = window.URL;
+    var file, img;
+    if ((file = this.files[0])) {
+        img = new Image();
+        img.onload = function () {
+            //alert("Width:" + this.width + "   Height: " + this.height);
+            widthedit=this.width;
+            heightedit=this.height;
+            };
+            img.src = _URL.createObjectURL(file);
+    }
     if($("#File1FLXengageEdit").prop('files').length > 0){
       $("#engagementEditFile").hide()
     }else{
       $("#engagementEditFile").show()
     }
   })
+
+  $(document).on("change", "#File1FlXengage", function () {
+    var _URL = window.URL;
+    var file, img;
+    if ((file = this.files[0])) {
+        img = new Image();
+        img.onload = function () {
+            //alert("Width:" + this.width + "   Height: " + this.height);
+            width=this.width;
+            height=this.height;
+            };
+            img.src = _URL.createObjectURL(file);
+    }
+  })
+  
   }
 
   protected get dataVersion(): Version {
@@ -420,8 +447,15 @@ list.get().then(l => {
 
 function UpdateFLXEngagement(itemid){
   console.log(LGUID);
+
   if($('#File1FLXengageEdit').prop('files').length > 0){
     var Editfile =$('#File1FLXengageEdit').prop('files')[0];
+    var ht=parseInt(heightedit),wt=parseInt(widthedit);
+    if(ht > 500 || wt > 500)
+    {
+      $("#engagementUpdateFileEmpty").html(`<p class="text-danger m-0">Height and Width must not exceed 500px</p>`)
+    }
+else{
     sp.web.getFolderByServerRelativeUrl(`/sites/${SiteName}/SiteAssets/Lists/${LGUID}`).files
   .add(Editfile.name, Editfile, true).then((fileItem)=>{
     sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).update({
@@ -437,6 +471,7 @@ function UpdateFLXEngagement(itemid){
       AlertMessage("<div class='alertfy-success'>Record updated successfully</div>");
     })
   })
+}
   }else{
     sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).update({
       Title: $("#TitleFLXEngagement").val(),
@@ -458,7 +493,16 @@ console.log(LGUID);
 
 if($('#File1FlXengage').prop('files').length == 0){
 $("#engagementAddFileEmpty").html(`<p class="text-danger m-0">Please Choose a File</p>`)
-}else {
+}
+else if($('#File1FlXengage').prop('files').length > 0)
+{
+  var ht=parseInt(height),wt=parseInt(width);
+  if(ht > 500 || wt > 500)
+  {
+  $("#engagementAddFileEmpty").html(`<p class="text-danger m-0">Height and Width must not exceed 500px</p>`)
+  }
+
+else {
 //uploadfile
 var file =$('#File1FlXengage').prop('files')[0];  
 sp.web.getFolderByServerRelativeUrl(`/sites/${SiteName}/SiteAssets/Lists/${LGUID}`).files
@@ -479,7 +523,7 @@ sp.web.getFolderByServerRelativeUrl(`/sites/${SiteName}/SiteAssets/Lists/${LGUID
  });
 });
 }
-  
+}
 }
 
 function DeleteFLXEngagement(itemid){
