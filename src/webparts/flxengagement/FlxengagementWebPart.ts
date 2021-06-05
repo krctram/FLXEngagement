@@ -292,7 +292,12 @@ $(document).on('click','.editimageflxengage',function(e){
  
 })
 $("#btnUpdateengage").click(function(){
-    UpdateFLXEngagement(itemid);
+  if(mandatoryforUpdateFLXEngagement()) {
+    UpdateFLXEngagement(itemid);   
+  } else {
+    console.log("All fileds not filled");
+  }
+    // UpdateFLXEngagement(itemid);
   })
   
   $("#btnDeleteengage").click(function(){
@@ -304,8 +309,13 @@ $("#btnUpdateengage").click(function(){
   // })
   //$("#btnSubmitengageFLXengage").click(()=>{AddFLXEngagement();})
   $("#btnSubmitengageFLXengage").click(function(){
-    AddFLXEngagement();
-  })
+    if (mandatoryforAddFLXEngagement()) {
+      AddFLXEngagement();   
+} else {
+  console.log("All fileds not filled");
+}
+    // AddFLXEngagement();  
+  })    
 
   $(document).on("change", "#File1FLXengageEdit", function () {
     var _URL = window.URL;
@@ -552,3 +562,39 @@ function AlertMessage(Message) {
     .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div>")
     .set("closable", false);
 }  
+
+
+function mandatoryforAddFLXEngagement(){
+  var isAllvalueFilled = true;
+  if (!$("#TitleFlXengage").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#URLFlXengage").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  else if (!$("#File1FlXengage").val()) {
+    alertify.error("Please upload file");
+    isAllvalueFilled = false;  
+  }   
+  return isAllvalueFilled;
+}
+
+function mandatoryforUpdateFLXEngagement(){
+  var isAllvalueFilled = true;
+  if (!$("#TitleFLXEngagement").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#URLFLXEngagement").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#File1FLXengageEdit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }     
+  return isAllvalueFilled;
+}
+
+
+
