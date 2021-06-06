@@ -49,6 +49,9 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
     console.log(SiteName);
 
     this.domElement.innerHTML = `
+    <div class="loader-section" style="display:none"> 
+    <div class="loader"></div>  
+    </div> 
     <div class="flx-engagement-section">
              
     <!-- <div class="addiconengage"> 
@@ -380,7 +383,7 @@ $("#btnUpdateengage").click(function(){
 }
 
 function FetchFLXEngagement() {
-  
+  $(".loader-section").show();
   let list = sp.web.lists.getByTitle("FLXEngagement");
 list.get().then(l => {
     console.log("List Id: " + l.Id);
@@ -430,10 +433,13 @@ list.get().then(l => {
       element.innerHTML = html;
 
     })
+    $(".loader-section").hide();
 } 
 
  function GetFLXEngagement(){
-  $("#engagementEditFile").show()
+  
+  $("#engagementEditFile").show();
+  $(".loader-section").show();
  sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).get().then((items: any[]) => 
   {
     const itemImage = JSON.parse(items["Image"]) || {};
@@ -452,10 +458,11 @@ list.get().then(l => {
   console.log(items);
   
  })
- 
+ $(".loader-section").hide();
 }
 
 function UpdateFLXEngagement(itemid){
+  $(".loader-section").show();
   console.log(LGUID);
 
   if($('#File1FLXengageEdit').prop('files').length > 0){
@@ -495,9 +502,10 @@ else{
         AlertMessage("<div class='alertfy-success'>Record updated successfully</div>");
       });
   }
-  
+  $(".loader-section").hide();
 }  
 function AddFLXEngagement() {
+  $(".loader-section").show();
 console.log(LGUID);
 
 
@@ -534,12 +542,14 @@ sp.web.getFolderByServerRelativeUrl(`/sites/${SiteName}/SiteAssets/Lists/${LGUID
 });
 }
 }
+$(".loader-section").hide();
 }
 
 function DeleteFLXEngagement(itemid){
+  $(".loader-section").show();
   sp.web.lists.getByTitle("FLXEngagement").items.getById((parseInt(itemid))).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
   // AlertMessage("Record Deleted successfully");
-
+  $(".loader-section").hide();
 }
  
  
@@ -553,6 +563,7 @@ function AlertMessage(Message) {
 
       onok: function () {
         window.location.href = "#";
+        $(".loader-section").hide();
         location.reload();
 
         //window.location.href = "#";
