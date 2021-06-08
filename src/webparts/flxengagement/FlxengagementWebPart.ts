@@ -41,14 +41,22 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
     });
   }
 
-  public render(): void {
+  public render(): void {    
     listUrl = this.context.pageContext.web.absoluteUrl;
     var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
     listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     SiteName = listUrl.split("/")[2]
-    console.log(SiteName);
+    console.log(SiteName);        
 
     this.domElement.innerHTML = `
+    <div class="viewallannounce text-end ">
+    
+  <!--  <button class="btn btn-outline-theme  rounded-0"  data-bs-toggle="modal" data-bs-target="#exampleModalscrollengage">View All</button> -->
+    <a href="#" class="info"  class="" data-bs-toggle="modal" data-bs-target="#exampleModalscrollengageone">View All</a>
+    </div>  
+    <div class="loader-section" style="display:none"> 
+    <div class="loader"></div>  
+    </div> 
     <div class="flx-engagement-section">
              
     <!-- <div class="addiconengage"> 
@@ -102,9 +110,9 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
         
        
        <div class="modal-body  modalbody-flexengage">
-       <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
+       <div class="row align-items-center my-3"><div class="col-4 titleflxengageman">Title</div><div class="col-1">:</div><div class="col-7">
        <input type="text" class="form-control rounded-0" id="TitleFLXEngagement" aria-describedby=""></div></div>
-       <div class="row align-items-center my-3"><div class="col-4">Url</div><div class="col-1">:</div><div class="col-7">
+       <div class="row align-items-center my-3"><div class="col-4 titleflxengageman">Url</div><div class="col-1">:</div><div class="col-7">
        <input type="text" class="form-control rounded-0" id="URLFLXEngagement" value="" aria-describedby=""></div></div>
  
       <!-- <div class="row align-items-center my-3"><div class="col-4">OpeningNewTab</div>
@@ -141,7 +149,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
  </div> 
  </div>
  </div>
-       <div class="row align-items-start my-3"><div class="col-4">Image</div><div class="col-1">:</div><div class="col-7">
+       <div class="row align-items-start my-3"><div class="col-4 titleflxengageman">Image</div><div class="col-1">:</div><div class="col-7">
         <input type="file" class="form-control-file custom-life-engage" class="mt-1" id="File1FLXengageEdit" accept="image/*">
         <div id="engagementUpdateFileEmpty"></div>
         <div id="engagementEditFile"></div>
@@ -187,8 +195,8 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
         
        
        <div class="modal-body">
-       <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="TitleFlXengage" aria-describedby=""></div></div>
-       <div class="row align-items-center my-3"><div class="col-4">Url</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="URLFlXengage" value="" aria-describedby=""></div></div>
+       <div class="row align-items-center my-3"><div class="col-4 titleflxengageman">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="TitleFlXengage" aria-describedby=""></div></div>
+       <div class="row align-items-center my-3"><div class="col-4 titleflxengageman">Url</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="URLFlXengage" value="" aria-describedby=""></div></div>
  
       <!-- <div class="row align-items-center my-3"><div class="col-4">OpeningNewTab</div><div class="col-1">:</div>
        <div class="col-7">
@@ -221,7 +229,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
  </div> 
  </div>
  </div> 
-       <div class="row align-items-start my-3"><div class="col-4">Image</div><div class="col-1">:</div><div class="col-7"> 
+       <div class="row align-items-start my-3"><div class="col-4 titleflxengageman">Image</div><div class="col-1">:</div><div class="col-7"> 
        <input type="file" class="form-control-file custom-life-engage" class="mt-1" id="File1FlXengage"  accept="image/*">
        <div id="engagementAddFileEmpty"></div>
        </div></div>
@@ -274,6 +282,52 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
    </div>
  </div>
  <!-- Delete Modal -->
+
+
+ <!---viewall popup -->
+
+<div class="modal fade" id="exampleModalscrollengage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog   modal-dialog-scrollable"">  
+    <div class="modal-content rounded-0">
+      <div class="modal-header">      
+        <h5 class="modal-title fw-bold w-100 text-center" id="exampleModalLabel">FLX Engagement</h5>
+    <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  -->
+      </div>     
+      <div class="modal-body viewallmodal"> 
+      <div class="viewallanounce">
+      <ul class="list-unstyled">      
+                 <li class="d-flex align-items-center row mx-1 my-3">
+                 <span class="addlearn col-1 addiconflxlearn"></span><a href="#" class="col-8 ">Test Data</a>
+                 <span class="icon-edit-announce col-2 pencileditvis"></span>
+                 </li>
+                 <li class="d-flex align-items-center row mx-1 my-3">
+                 <span class="addlearn col-1 addiconflxlearn"></span><a href="#" class="col-8 ">Test Data</a>
+                 <span class="icon-edit-announce col-2 pencileditvis"></span>
+                 </li>
+                 <li class="d-flex align-items-center row mx-1 my-3">
+                 <span class="addlearn col-1 addiconflxlearn"></span><a href="#" class="col-8 ">Test Data</a>
+                 <span class="icon-edit-announce col-2 pencileditvis"></span>
+                 </li>
+                 <li class="d-flex align-items-center row mx-1 my-3">
+                 <span class="addlearn col-1 addiconflxlearn"></span><a href="#" class="col-8 ">Test Data</a>
+                 <span class="icon-edit-announce col-2 pencileditvis"></span>
+                 </li>
+                 <li class="d-flex align-items-center row mx-1 my-3">
+                 <span class="addlearn col-1 addiconflxlearn"></span><a href="#" class="col-8 ">Test Data</a>
+                 <span class="icon-edit-announce col-2 pencileditvis"></span>
+                 </li>   
+                 </ul> 
+      
+      </div>
+      </div>
+      <div class="modal-footer"> 
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal" id="btnclose">Close</button>
+        <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnsubmit">Submit</button> 
+      </div>        
+    </div>
+  </div>
+</div>
+
 `;
 FetchFLXEngagement();
 
@@ -292,7 +346,12 @@ $(document).on('click','.editimageflxengage',function(e){
  
 })
 $("#btnUpdateengage").click(function(){
-    UpdateFLXEngagement(itemid);
+  if(mandatoryforUpdateFLXEngagement()) {
+    UpdateFLXEngagement(itemid);   
+  } else {
+    console.log("All fileds not filled");
+  }
+    // UpdateFLXEngagement(itemid);
   })
   
   $("#btnDeleteengage").click(function(){
@@ -304,8 +363,13 @@ $("#btnUpdateengage").click(function(){
   // })
   //$("#btnSubmitengageFLXengage").click(()=>{AddFLXEngagement();})
   $("#btnSubmitengageFLXengage").click(function(){
-    AddFLXEngagement();
-  })
+    if (mandatoryforAddFLXEngagement()) {
+      AddFLXEngagement();   
+} else {
+  console.log("All fileds not filled");
+}
+    // AddFLXEngagement();  
+  })    
 
   $(document).on("change", "#File1FLXengageEdit", function () {
     var _URL = window.URL;
@@ -370,7 +434,7 @@ $("#btnUpdateengage").click(function(){
 }
 
 function FetchFLXEngagement() {
-  
+  $(".loader-section").show();
   let list = sp.web.lists.getByTitle("FLXEngagement");
 list.get().then(l => {
     console.log("List Id: " + l.Id);
@@ -420,10 +484,13 @@ list.get().then(l => {
       element.innerHTML = html;
 
     })
+    $(".loader-section").hide();
 } 
 
  function GetFLXEngagement(){
-  $("#engagementEditFile").show()
+  
+  $("#engagementEditFile").show();
+  $(".loader-section").show();
  sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).get().then((items: any[]) => 
   {
     const itemImage = JSON.parse(items["Image"]) || {};
@@ -442,10 +509,11 @@ list.get().then(l => {
   console.log(items);
   
  })
- 
+ $(".loader-section").hide();
 }
 
 function UpdateFLXEngagement(itemid){
+  $(".loader-section").show();
   console.log(LGUID);
 
   if($('#File1FLXengageEdit').prop('files').length > 0){
@@ -485,9 +553,10 @@ else{
         AlertMessage("<div class='alertfy-success'>Record updated successfully</div>");
       });
   }
-  
+  $(".loader-section").hide();
 }  
 function AddFLXEngagement() {
+  $(".loader-section").show();
 console.log(LGUID);
 
 
@@ -524,12 +593,14 @@ sp.web.getFolderByServerRelativeUrl(`/sites/${SiteName}/SiteAssets/Lists/${LGUID
 });
 }
 }
+$(".loader-section").hide();
 }
 
 function DeleteFLXEngagement(itemid){
+  $(".loader-section").show();
   sp.web.lists.getByTitle("FLXEngagement").items.getById((parseInt(itemid))).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
   // AlertMessage("Record Deleted successfully");
-
+  $(".loader-section").hide();
 }
  
  
@@ -543,6 +614,7 @@ function AlertMessage(Message) {
 
       onok: function () {
         window.location.href = "#";
+        $(".loader-section").hide();
         location.reload();
 
         //window.location.href = "#";
@@ -552,3 +624,39 @@ function AlertMessage(Message) {
     .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div>")
     .set("closable", false);
 }  
+
+
+function mandatoryforAddFLXEngagement(){
+  var isAllvalueFilled = true;
+  if (!$("#TitleFlXengage").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#URLFlXengage").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  else if (!$("#File1FlXengage").val()) {
+    alertify.error("Please upload file");
+    isAllvalueFilled = false;  
+  }   
+  return isAllvalueFilled;
+}
+
+function mandatoryforUpdateFLXEngagement(){
+  var isAllvalueFilled = true;
+  if (!$("#TitleFLXEngagement").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#URLFLXEngagement").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#File1FLXengageEdit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }     
+  return isAllvalueFilled;
+}
+
+
+
