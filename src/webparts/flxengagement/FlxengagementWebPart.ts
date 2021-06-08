@@ -27,6 +27,8 @@ var alertify: any = require("../../ExternalRef/js/alertify.min.js");
  let SiteName = "";
  let SelectedImage = "";
  var width="",height="",widthedit="",heightedit="";
+ var FilteredAdmin =[];
+var currentuser = "";
 export interface IFlxengagementWebPartProps {
   description: string;
 }
@@ -43,6 +45,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
 
   public render(): void {    
     listUrl = this.context.pageContext.web.absoluteUrl;
+    currentuser = this.context.pageContext.user.email;
     var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
     listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     SiteName = listUrl.split("/")[2]
@@ -52,7 +55,8 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
     <div class="viewallannounce text-end ">
     
   <!--  <button class="btn btn-outline-theme  rounded-0"  data-bs-toggle="modal" data-bs-target="#exampleModalscrollengage">View All</button> -->
-    <a href="#" class="info"  class="" data-bs-toggle="modal" data-bs-target="#exampleModalscrollengageone">View All</a>
+  <a href="#" class="info"  class="color-info" id="ViewAll">View All</a> 
+  <a href="#" class="info"  class="color-info" id="ShowVisible">Show Visible</a> 
     </div>  
     <div class="loader-section" style="display:none"> 
     <div class="loader"></div>  
@@ -329,8 +333,16 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
 </div>
 
 `;
-FetchFLXEngagement();
 
+getadminfromsite();
+      $("#ShowVisible").hide();
+      $("#ViewAll").show();
+      $("#ViewAll").click(()=>{
+        FetchFLXEngagementAll();
+      });
+      $("#ShowVisible").click(()=>{
+        FetchFLXEngagement();
+      });
     
 
 $("#engagementDeleteModal").click(()=>{
@@ -432,9 +444,34 @@ $("#btnUpdateengage").click(function(){
     };
   }
 }
-
+async function getadminfromsite() {
+  $(".loader-section").show();
+  var AdminInfo = [];
+  await sp.web.siteGroups
+    .getByName("FLX Admins")
+    .users.get()
+    .then(function (result) {
+      for (var i = 0; i < result.length; i++) {
+        AdminInfo.push({
+          Title: result[i].Title,
+          ID: result[i].Id,
+          Email: result[i].Email,
+        });
+      }
+      FilteredAdmin = AdminInfo.filter((admin)=>{return (admin.Email == currentuser)});
+      console.log(FilteredAdmin);
+      FetchFLXEngagement();
+    })
+    .catch(function (err) {
+      alert("Group not found: " + err);
+      $(".loader-section").hide();
+    });
+    $(".loader-section").hide();
+}
 function FetchFLXEngagement() {
   $(".loader-section").show();
+  $("#ShowVisible").hide();
+  $("#ViewAll").show();
   let list = sp.web.lists.getByTitle("FLXEngagement");
 list.get().then(l => {
     console.log("List Id: " + l.Id);
@@ -447,7 +484,8 @@ list.get().then(l => {
     .items.select("*","Title", "URL", "OpeningNewTab", "Visible", "Image").filter("Visible eq '1'").getAll()
     .then((items: any[]) => {
       console.log(items);
-      
+      if (FilteredAdmin.length>0) 
+      {
       for (var i = 0; i < items.length; i++) {
         const item = items[i];
         const itemImage = JSON.parse(item.Image) || {};
@@ -482,7 +520,35 @@ list.get().then(l => {
 
       var element = document.getElementById("engageedit");
       element.innerHTML = html;
-
+    }
+    else{
+      for (var i = 0; i < items.length; i++) {
+        const item = items[i];
+        const itemImage = JSON.parse(item.Image) || {};
+        const serverUrl = itemImage.serverUrl || "";
+        const imageUrl = itemImage.serverRelativeUrl || "";
+        
+        if (item.OpeningNewTab === true) {
+          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+            <span class="editimage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id ="${item.ID}"></span></div>
+            <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
+            <div class="q-link-title">${item.Title}</div></a></div>`
+          // console.log(items)
+        }    
+        else { 
+          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          <span class="editimage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
+          </div>
+            <a href="${item.URL}"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a class="" href="${item.URL}">
+            <div class="q-link-title ">${item.Title}</div></a></div>`
+        }
+      } 
+      var element = document.getElementById("engageedit");
+      element.innerHTML = html;
+      $("#ViewAll").hide();
+      $("#ShowVisible").hide();
+    }
+    
     })
     $(".loader-section").hide();
 } 
@@ -658,5 +724,59 @@ function mandatoryforUpdateFLXEngagement(){
   return isAllvalueFilled;
 }
 
+function FetchFLXEngagementAll() {
+  $(".loader-section").show();
+  $("#ShowVisible").show();
+  $("#ViewAll").hide();
+  let list = sp.web.lists.getByTitle("FLXEngagement");
+list.get().then(l => {
+    console.log("List Id: " + l.Id);
+    LGUID=l.Id;
+}); 
+  var html = "";
+  
+  sp.web.lists
+    .getByTitle("FLXEngagement")
+    .items.select("*","Title", "URL", "OpeningNewTab", "Visible", "Image").getAll()
+    .then((items: any[]) => {
+      console.log(items);
+      
+      for (var i = 0; i < items.length; i++) {
+        const item = items[i];
+        const itemImage = JSON.parse(item.Image) || {};
+        const serverUrl = itemImage.serverUrl || "";
+        const imageUrl = itemImage.serverRelativeUrl || "";
+        
+        if (item.OpeningNewTab === true) {
+          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+            <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id ="${item.ID}"></span></div>
+            <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
+            <div class="q-link-title">${item.Title}</div></a></div>`
+          // console.log(items)
+        }    
+        else { 
+          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
+          </div>
+            <a href="${item.URL}"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a class="" href="${item.URL}">
+            <div class="q-link-title ">${item.Title}</div></a></div>`
+        }
+      } 
 
+      if(items.length>=0){
+        html+=`<div class="card text-center m-2 flxengagecursor" style="width: 9rem; height:10.5rem ;border-radius:0">
+        <div class="card-body my-4">
+        <span class="engage-add-icon" data-bs-toggle="modal" data-bs-target="#staticBackdroptwo"></span>
+        <p class="engage-title my-2">Add Link</p>
+        </div>
+      </div>`
+      }   
+
+
+      var element = document.getElementById("engageedit");
+      element.innerHTML = html;
+
+    })
+    $(".loader-section").hide();
+} 
 
