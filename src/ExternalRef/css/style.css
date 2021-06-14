@@ -468,3 +468,14 @@ button.ajs-button.ajs-ok {
   color: white !important;
 
 }
+.englearn{
+	color: #4BB543;
+	left: 8.3rem;
+	  position: absolute;
+	  font-size: .8rem;
+	  top: -4px;
+	  font-weight: 500;
+  }
+  .englrn{
+	position: relative;
+  }

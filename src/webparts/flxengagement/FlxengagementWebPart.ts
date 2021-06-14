@@ -21,6 +21,8 @@ var alertify: any = require("../../ExternalRef/js/alertify.min.js");
 
 
  import * as $ from "jquery";
+ import * as moment from "moment";  
+ var Badgingdays="";
  var itemid = "";
  var listUrl = ""
  let LGUID = "";
@@ -287,7 +289,7 @@ export default class FlxengagementWebPart extends BaseClientSideWebPart<IFlxenga
  </div>
  <!-- Delete Modal -->
 
-
+  
  <!---viewall popup -->
 
 <div class="modal fade" id="exampleModalscrollengage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -446,6 +448,15 @@ $("#btnUpdateengage").click(function(){
 }
 async function getadminfromsite() {
   $(".loader-section").show();
+
+  var bag=[];
+  let listLocation  = await sp.web.getList(listUrl + "Badging").items.get(); 
+  listLocation.forEach((li) => {
+   bag.push(li.Days); 
+   console.log(bag);
+  });
+  Badgingdays= bag[0];
+  console.log(Badgingdays);
   var AdminInfo = [];
   await sp.web.siteGroups
     .getByName("FLX Admins")
@@ -493,23 +504,23 @@ list.get().then(l => {
         const imageUrl = itemImage.serverRelativeUrl || "";
         
         if (item.OpeningNewTab === true) {
-          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          html += `<div class="englrn"><span class="englearn engslearn${i}">New</span><div class = "q-link m-3 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
             <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id ="${item.ID}"></span></div>
             <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
-            <div class="q-link-title">${item.Title}</div></a></div>`
+            <div class="q-link-title">${item.Title}</div></a></div></div>`
           // console.log(items)
         }    
         else { 
-          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          html += `<div class="englrn"><span class="englearn engslearn${i}">New</span><div class = "q-link m-3 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
           <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
           </div>
             <a href="${item.URL}"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a class="" href="${item.URL}">
-            <div class="q-link-title ">${item.Title}</div></a></div>`
+            <div class="q-link-title ">${item.Title}</div></a></div></div>`
         }
       } 
 
       if(items.length>=0){
-        html+=`<div class="card text-center m-2 flxengagecursor" style="width: 9rem; height:10.5rem ;border-radius:0">
+        html+=`<div class="card text-center m-2 p-2 mt-3 flxengagecursor" style="width: 9rem; height:10.5rem ;border-radius:0">
         <div class="card-body my-4">
         <span class="engage-add-icon" data-bs-toggle="modal" data-bs-target="#staticBackdroptwo"></span>
         <p class="engage-title my-2">Add Link</p>
@@ -526,28 +537,51 @@ list.get().then(l => {
         const item = items[i];
         const itemImage = JSON.parse(item.Image) || {};
         const serverUrl = itemImage.serverUrl || "";
-        const imageUrl = itemImage.serverRelativeUrl || "";
+        const imageUrl = itemImage.serverRelativeUrl || "";  
         
         if (item.OpeningNewTab === true) {
-          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          html += `<div class="englrn"><span class="englearn engslearn${i}">New</span><div class = "q-link m-3 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
             <span class="editimage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id ="${item.ID}"></span></div>
             <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
-            <div class="q-link-title">${item.Title}</div></a></div>`
+            <div class="q-link-title">${item.Title}</div></a></div></div>`
           // console.log(items)
         }    
         else { 
-          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          html += `<div class="englrn"><span class="englearn engslearn${i}">New</span><div class = "q-link m-3 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
           <span class="editimage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
           </div>
             <a href="${item.URL}"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a class="" href="${item.URL}">
-            <div class="q-link-title ">${item.Title}</div></a></div>`
+            <div class="q-link-title ">${item.Title}</div></a></div></div>`
         }
       } 
       var element = document.getElementById("engageedit");
       element.innerHTML = html;
+
       $("#ViewAll").hide();
       $("#ShowVisible").hide();
     }
+    var count;
+    for(var i=0;i<items.length;i++){
+      count=i;
+      var today = new Date();
+      var startdate=new Date(items[i].Created);
+          var sdate=new Date(items[i].Created);
+          var Edate=sdate.setDate(sdate.getDate() + parseInt(Badgingdays));
+    var enddate=new Date(Edate);
+    var startdatemt=moment(startdate).format("YYYY-MM-DD");
+    var enddatemt=moment(enddate).format("YYYY-MM-DD");
+    var todaymt=moment(today).format("YYYY-MM-DD");
+    
+          if(todaymt >= startdatemt && todaymt < enddatemt || todaymt > startdatemt && todaymt <= enddatemt){
+    
+    $(".engslearn"+count).show();   
+    }  
+    else{    
+      $(".engslearn"+count).hide(); 
+   
+    }
+    }
+   
     
     })
     $(".loader-section").hide();
@@ -742,29 +776,29 @@ list.get().then(l => {
       console.log(items);
       
       for (var i = 0; i < items.length; i++) {
-        const item = items[i];
+        const item = items[i];   
         const itemImage = JSON.parse(item.Image) || {};
         const serverUrl = itemImage.serverUrl || "";
         const imageUrl = itemImage.serverRelativeUrl || "";
         
         if (item.OpeningNewTab === true) {
-          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+          html += `<div class="englrn"><span class="englearn engslearn${i}">New</span><div class = "q-link m-3 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
             <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id ="${item.ID}"></span></div>
             <a data-interception="off" href="${item.URL}" target="_blank"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a data-interception="off" class="" href="${item.URL}" target="_blank">
-            <div class="q-link-title">${item.Title}</div></a></div>`
+            <div class="q-link-title">${item.Title}</div></a></div></div>`
           // console.log(items)
         }    
-        else { 
-          html += `<div class = "q-link m-2 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
+        else {   
+          html += `<div class="englrn"><span class="englearn engslearn${i}">New</span><div class = "q-link m-3 text-center p-2"><div class="iconaddengage text-end py-1 px-2">
           <span class="editimageflxengage" data-bs-toggle="modal" data-bs-target="#staticBackdropone" data-id="${item.ID}"></span>
           </div>
             <a href="${item.URL}"><img class="q-link-img" src="${serverUrl}${imageUrl}" alt="img"/></a><a class="" href="${item.URL}">
-            <div class="q-link-title ">${item.Title}</div></a></div>`
+            <div class="q-link-title ">${item.Title}</div></a></div></div>`
         }
       } 
 
       if(items.length>=0){
-        html+=`<div class="card text-center m-2 flxengagecursor" style="width: 9rem; height:10.5rem ;border-radius:0">
+        html+=`<div class="card text-center m-2 p-2 mt-3 flxengagecursor" style="width: 9rem; height:10.5rem ;border-radius:0">
         <div class="card-body my-4">
         <span class="engage-add-icon" data-bs-toggle="modal" data-bs-target="#staticBackdroptwo"></span>
         <p class="engage-title my-2">Add Link</p>
@@ -775,6 +809,28 @@ list.get().then(l => {
 
       var element = document.getElementById("engageedit");
       element.innerHTML = html;
+      var count;
+      for(var i=0;i<items.length;i++){
+        count=i;
+        var today = new Date();
+        var startdate=new Date(items[i].Created);
+            var sdate=new Date(items[i].Created);
+            var Edate=sdate.setDate(sdate.getDate() + parseInt(Badgingdays));
+      var enddate=new Date(Edate);
+      var startdatemt=moment(startdate).format("YYYY-MM-DD");
+      var enddatemt=moment(enddate).format("YYYY-MM-DD");
+      var todaymt=moment(today).format("YYYY-MM-DD");
+      
+            if(todaymt >= startdatemt && todaymt < enddatemt || todaymt > startdatemt && todaymt <= enddatemt){
+      
+      $(".engslearn"+count).show();   
+      }  
+      else{    
+        $(".engslearn"+count).hide(); 
+     
+      }
+      }
+     
 
     })
     $(".loader-section").hide();
