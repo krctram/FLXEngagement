@@ -447,7 +447,6 @@ $("#btnUpdateengage").click(function(){
   }
 }
 async function getadminfromsite() {
-  $(".loader-section").show();
 
   var bag=[];
   let listLocation  = await sp.web.getList(listUrl + "Badging").items.get(); 
@@ -475,12 +474,12 @@ async function getadminfromsite() {
     })
     .catch(function (err) {
       alert("Group not found: " + err);
-      $(".loader-section").hide();
+      
     });
-    $(".loader-section").hide();
+    
 }
 function FetchFLXEngagement() {
-  $(".loader-section").show();
+  
   $("#ShowVisible").hide();
   $("#ViewAll").show();
   let list = sp.web.lists.getByTitle("FLXEngagement");
@@ -584,13 +583,12 @@ list.get().then(l => {
    
     
     })
-    $(".loader-section").hide();
+   
 } 
 
  function GetFLXEngagement(){
   
   $("#engagementEditFile").show();
-  $(".loader-section").show();
  sp.web.lists.getByTitle("FLXEngagement").items.getById(parseInt(itemid)).get().then((items: any[]) => 
   {
     const itemImage = JSON.parse(items["Image"]) || {};
@@ -609,7 +607,7 @@ list.get().then(l => {
   console.log(items);
   
  })
- $(".loader-section").hide();
+
 }
 
 function UpdateFLXEngagement(itemid){
@@ -759,7 +757,6 @@ function mandatoryforUpdateFLXEngagement(){
 }
 
 function FetchFLXEngagementAll() {
-  $(".loader-section").show();
   $("#ShowVisible").show();
   $("#ViewAll").hide();
   let list = sp.web.lists.getByTitle("FLXEngagement");
@@ -833,6 +830,5 @@ list.get().then(l => {
      
 
     })
-    $(".loader-section").hide();
 } 
 
